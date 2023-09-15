@@ -1,4 +1,4 @@
-# vue_pwa
+# xenon-office-door
 
 ## Project setup
 ```
