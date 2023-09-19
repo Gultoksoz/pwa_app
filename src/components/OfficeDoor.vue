@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'OfficeDoor',
   data () {
     return {
       password: '',
@@ -34,9 +34,9 @@ export default {
   },
   methods: {
     async openTheDoor () {
-      this.loadingClassName = 'button--loading button'
       console.log(this.password)
       if (this.password === '1234') {
+        this.loadingClassName = 'button--loading button'
         try {
           const response = await fetch('https://officeapi.dumanrd.com/76439485765479374', {
             method: 'GET',
