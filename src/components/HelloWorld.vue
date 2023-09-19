@@ -34,17 +34,20 @@ export default {
       console.log(this.password)
       if (this.password === '1234') {
         try {
-          const response = await fetch('https://57.128.171.246:8880/76439485765479374', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const result = await response.json()
-          console.log('Success:', result)
+          // const response = await fetch('https://57.128.171.246:8880/76439485765479374', {
+          //   method: 'GET',
+          //   headers: {
+          //     'Content-Type': 'application/json'
+          //   }
+          // })
+          // const result = await response.json()
+          // console.log('Success:', result)
+          const xhr = new XMLHttpRequest()
+          xhr.open('GET', 'https://57.128.171.246:8880/76439485765479374')
+          xhr.send()
         } catch (error) {
           console.error('Error:', error)
-          window.open('https://57.128.171.246:8880/76439485765479374')
+          // window.open('https://57.128.171.246:8880/76439485765479374')
           // window.location.href = 'https://57.128.171.246:8880/76439485765479374'
         }
       } else {
