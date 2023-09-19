@@ -1,14 +1,14 @@
 <template>
-  <HelloWorld msg="XENON SMART"/>
+  <OfficeDoor msg="XENON SMART"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import OfficeDoor from './components/OfficeDoor.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    OfficeDoor
   }
 }
 </script>
