@@ -32,7 +32,7 @@ export default {
       console.log(this.password)
       if (this.password === '1234') {
         try {
-          const response = await fetch('http://57.128.171.246:8880/76439485765479374', {
+          const response = await fetch('https://officeapi.dumanrd.com/76439485765479374', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
