@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'OfficeDoor',
   data () {
@@ -38,13 +40,23 @@ export default {
       if (this.password === '1234') {
         this.loadingClassName = 'button--loading button'
         try {
-          const response = await fetch('https://officeapi.dumanrd.com/76439485765479374', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const result = await response.json()
+          // const response = await fetch('https://officeapi.dumanrd.com/76439485765479374', {
+          //   method: 'GET',
+          //   headers: {
+          //     'Content-Type': 'application/json'
+          //   }
+          // })
+          // const result = await response.json()
+          // console.log('Success:', result)
+          // this.$swal.fire({
+          //   title: 'Door opened',
+          //   icon: 'success',
+          //   confirmButtonText: 'OK!'
+          // })
+          // this.loadingClassName = 'button'
+          const headers = { "Content-Type": "application/json" }
+          const response = await axios.get('https://officeapi.dumanrd.com/76439485765479374', { headers })
+          const result = await response.status
           console.log('Success:', result)
           this.$swal.fire({
             title: 'Door opened',
