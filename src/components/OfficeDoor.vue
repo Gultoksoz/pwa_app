@@ -1,4 +1,6 @@
 <template>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+
   <div class="hello">
     <img src="img/icons/Xenon-Logo.png"/>
   </div>
@@ -86,6 +88,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .form-message p{
   color: red;
 }
