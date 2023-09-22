@@ -53,6 +53,7 @@ export default {
       password: {
         required: helpers.withMessage("Bu alan boş bırakılamaz.",required),
         numeric:helpers.withMessage("Şifre sayılardan oluşmalı.",numeric),
+        $autoDirty: true ,
         minLength:helpers.withMessage("Şifre 4 karakterden oluşmalı.",minLength(4)) ,
         maxLength:helpers.withMessage("Şifre 4 karakterden oluşmalı.",maxLength(4)) 
       }
@@ -63,7 +64,8 @@ export default {
   },
   methods: {
     async validateForm(){
-      const isFormCorrect = await this.v$.$validate() //validate() fonksiyonunun içine yazdığımız kuralları kontrol edip uygun veya hatalı durumunu gönderir.
+      
+      const isFormCorrect = await this.v$.$validate() //validate() fonksiyonu, yazdığımız kuralları kontrol edip uygun veya hatalı durumunu gönderir.
       //Eğer şifre uygunsa openTheDoor() fonk çağırılır.
       if(isFormCorrect)
       {
