@@ -1,19 +1,28 @@
 <template>
+  <!--Safaride otomatik zoomu engellemek için yazıldı-->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 
   <div class="hello">
+    <!--Sayfanın başındaki logo-->
     <img src="img/icons/Xenon-Logo.png"/>
   </div>
   <div class="form">
     <div class="form-body">
-    <input type="password" name="password" v-model="password" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" placeholder="* * * *" maxlength=4 />
+      <!--Şifrenin istendiği alan-->
+      <input type="password" inputmode="numeric" name="password" v-model="password" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" placeholder="* * * *" maxlength=4 />
+      <!--Girilen şifrede hata varsa yazdırılır-->
+      <p v-for="error of v$.password.$errors" :key="error.$uid">
+        <small>{{ error.$message }}</small>
+      </p>
     </div>
     <div class="form-action">
-      <button type="button"  :class="loadingClassName" @click="openTheDoor()">
+      <!--Kapıyı aç butonu. Tıklandığında girilen şifreyi kontrol eden fonk çağırılır.-->
+      <button type="button"  :class="loadingClassName" @click="validateForm()">
     <span class="button__text">OPEN DOOR</span>
 </button>
-      <!-- <button @click="openTheDoor()" :disabled="isButtonDisabled">OPEN DOOR</button> -->
+  
     </div>
+    <!--Girilen şifre doğru değilse hatalıdır yazar.-->
     <div v-if="isPasswordWrong" class="form-message">
       <p>Şifre hatalı!</p>
     </div>
@@ -23,58 +32,68 @@
 <script>
 import axios from 'axios'
 
+import { useVuelidate } from '@vuelidate/core'
+import { required,numeric,minLength,maxLength, helpers } from '@vuelidate/validators'
+
 export default {
   name: 'OfficeDoor',
+
+  setup: () => ({ v$: useVuelidate() }),
   data () {
     return {
-      password: '',
-      isPasswordWrong: false,
-      loadingClassName: 'button', //  button--loading
-      loading: false
+      password: '',//şifreyi tuttuğumuz değişken
+      isPasswordWrong: false,// şifrenin yanlış veya doğru olma durumunu tuttuğumuz değişken
+      loadingClassName: 'button', //  button--loading. Butona basıldığında doğru şifre girildiyse kapı açıldı bildirimi gelene kadar kullanıcıya gösterilen butonun classı.
+      //loading: false
+    }
+  },
+  //validasyon işlemleri için kullandığımız özellikler ve hata mesajları.
+  validations () {
+    return {
+      password: {
+        required: helpers.withMessage("Bu alan boş bırakılamaz.",required),
+        numeric:helpers.withMessage("Şifre sayılardan oluşmalı.",numeric),
+        minLength:helpers.withMessage("Şifre 4 karakterden oluşmalı.",minLength(4)) ,
+        maxLength:helpers.withMessage("Şifre 4 karakterden oluşmalı.",maxLength(4)) 
+      }
     }
   },
   props: {
     msg: String
   },
   methods: {
+    async validateForm(){
+      const isFormCorrect = await this.v$.$validate() //validate() fonksiyonunun içine yazdığımız kuralları kontrol edip uygun veya hatalı durumunu gönderir.
+      //Eğer şifre uygunsa openTheDoor() fonk çağırılır.
+      if(isFormCorrect)
+      {
+        this.openTheDoor()
+      }
+    },
     async openTheDoor () {
       console.log(this.password)
-      if (this.password === '1234') {
-        this.loadingClassName = 'button--loading button'
+      if (this.password === '1234') { //Girilen şifre doğru mu kontrol edilir.
+        this.loadingClassName = 'button--loading button' //Şifrenin doğru olduğu durumda istek atılırken opendoor butonun classı değiştirilir.
         try {
-          // const response = await fetch('https://officeapi.dumanrd.com/76439485765479374', {
-          //   method: 'GET',
-          //   headers: {
-          //     'Content-Type': 'application/json'
-          //   }
-          // })
-          // const result = await response.json()
-          // console.log('Success:', result)
-          // this.$swal.fire({
-          //   title: 'Door opened',
-          //   icon: 'success',
-          //   confirmButtonText: 'OK!'
-          // })
-          // this.loadingClassName = 'button'
-          const headers = { "Content-Type": "application/json" }
-          const response = await axios.get('https://officeapi.dumanrd.com/76439485765479374', { headers })
-          const result = await response.status
+          const headers = { "Content-Type": "application/json" } // isteğimizin headrını bildiriyoruz
+          const response = await axios.get('https://officeapi.dumanrd.com/76439485765479374', { headers }) // İstek atılacak urlye axios ile get isteği atılır.
+          const result = await response.status //gelen cevabın durumunu result değişkenine atıyoruz.
           console.log('Success:', result)
-          this.$swal.fire({
+          this.$swal.fire({  // Door opened yazan bir pop-up oluşturuyoruz
             title: 'Door opened',
             icon: 'success',
             confirmButtonText: 'OK!'
           })
-          this.loadingClassName = 'button'
-        } catch (error) {
-          console.error('Error:', error)
+          this.loadingClassName = 'button' // Pop-up gösterildikten sonra buton classı değiştiriliyor
+        } catch (error) { //Bu işlemler yapılırken bir hata gerçekleşirse bu blok çalışır
+          console.error('Error:', error) //hatayı konsola yazdırıyoruz
         }
-      } else {
+      } else { //Şifrenin yanlış olma durumunda bu değişkeni true yapıyoruz.
         this.isPasswordWrong = true
       }
     }
   },
-  watch: {
+  watch: { //Şifrenin yanlış olma durumunda şifre hatalıdır yazısının 5sn ekranda durması için
     isPasswordWrong (val) {
       if (val) {
         setTimeout(() => {
@@ -89,18 +108,30 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.form-message p{
+.form-message p{ /*Şifre hatalıdır yazısı */
   color: red;
 }
+
+.form-body small{ /*Şifrenin uygunluk kuralları */
+  color: red;
+  display: inline-block;
+  width: revert;
+  height: 52px;
+}
+.form-body{ /*Şifre uyarıları ve input */
+  width: revert;
+  height: 52px;
+  margin-bottom: 15px;
+  margin-top: 50px;
+}
+
 input{
-  /* margin-top: 80px; */
   display: flex;
   margin: 30px auto;
 }
-input[placeholder] {
-
-text-align-last: justify;
-
+input[placeholder] { /* uyarılar çıktığında inputun durumu */
+justify-items: center;
+margin: auto;
 }
 
 .button {
@@ -123,7 +154,7 @@ text-align-last: justify;
   transition: all 0.2s;
 }
 
-.button--loading .button__text {
+.button--loading .button__text { /*Butona basıldığında success durumunda bildirim çıkana kadar butonun yazı görünümü  */
   visibility: hidden;
   opacity: 0;
 }
@@ -144,7 +175,7 @@ text-align-last: justify;
   animation: button-loading-spinner 1s ease infinite;
 }
 
-@keyframes button-loading-spinner {
+@keyframes button-loading-spinner { /*yükleniyor butonu animasyonu */
   from {
     transform: rotate(0turn);
   }
