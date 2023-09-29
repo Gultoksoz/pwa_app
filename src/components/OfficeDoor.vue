@@ -84,7 +84,9 @@ export default {
           this.$swal.fire({  // Door opened yazan bir pop-up oluşturuyoruz
             title: 'Door opened',
             icon: 'success',
-            confirmButtonText: 'OK!'
+            confirmButtonText: 'OK!',
+            timer:3000
+
           })
           this.loadingClassName = 'button' // Pop-up gösterildikten sonra buton classı değiştiriliyor
         } catch (error) { //Bu işlemler yapılırken bir hata gerçekleşirse bu blok çalışır
@@ -112,6 +114,7 @@ export default {
 
 .form-message p{ /*Şifre hatalıdır yazısı */
   color: red;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-body small{ /*Şifrenin uygunluk kuralları */
@@ -119,6 +122,7 @@ export default {
   display: inline-block;
   width: revert;
   height: 52px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .form-body{ /*Şifre uyarıları ve input */
   width: revert;
@@ -138,20 +142,21 @@ margin: auto;
 
 .button {
   position: relative;
-  padding: 8px 16px;
-  background: #009579;
+  padding: 15px 20px;
+  background-color: #4cb151;
   border: none;
   outline: none;
-  border-radius: 2px;
+  border-radius: 10px;
   cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .button:active {
-  background: #007a63;
+  background-color: #4cb151;
 }
 
 .button__text {
-  font: bold 20px "Quicksand", san-serif;
+  font: 20px "Arial", san-serif;
   color: #ffffff;
   transition: all 0.2s;
 }
